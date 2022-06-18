@@ -1,11 +1,10 @@
 import React from "react";
 import Product from "./Product";
 
-const ProductList = ({ products, searchField }) => {
+const ProductList = ({ products }) => {
   return (
     <>
-      <h1>ProductList</h1>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap sm:px-12 py-6">
         {products.map((el) => (
           <Product product={el} key={el.id} />
         ))}

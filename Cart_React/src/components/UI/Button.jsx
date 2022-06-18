@@ -5,6 +5,7 @@ const Button = (props) => {
     <button
       className={`${props.className} + " " + rounded-full py-3 px-6 hover:scale-110 transition-all`}
       onClick={props.onClick}
+      type={props.type}
     >
       {props.children}
     </button>

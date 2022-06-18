@@ -1,5 +1,6 @@
 :root {
-  --primary: #6161fe;
+  --primary: #a4a4ff;
+  --primary-dark: #3b3bfb;
 }
 
 @tailwind base;
@@ -7,7 +8,14 @@
 @tailwind utilities;
 
 .search {
-  background-color: rgb(81, 104, 255);
+  background-color: rgb(251, 146, 60);
+}
+.header {
+  background-image: linear-gradient(
+    to right bottom,
+    var(--primary-dark),
+    var(--primary)
+  );
 }
 
 @layer base {

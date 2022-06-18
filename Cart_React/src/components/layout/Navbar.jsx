@@ -1,30 +1,27 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Button from "../UI/Button";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
   const cart = useSelector((state) => state.cart.cart);
 
   return (
-    <div className="flex  items-center">
-      <div>Navbar</div>
-
-      <input
-        type="text"
-        name=""
-        id=""
-        className="border-gray-600 border-2 mr-auto w-4/12 ml-10 rounded-full px-2 py-0.5 transition-all focus:scale-110 outline-none "
-        placeholder="Search"
-        onChange={props.inputChangeHandler}
-        value={props.searchInput}
-      />
-
+    <div className="flex  items-center justify-between m-4">
       <div>
-        <Button className="ml-auto hover:text-white search">
-          {" "}
-          <span>{cart.length}</span> Cart
-        </Button>
+        <h1 className="font-bold text-3xl tracking-wide">
+          <Link to="/">Shopping Cart</Link>
+        </h1>
       </div>
+
+      <Link to="/cart">
+        <Button className=" hover:text-white search px-12 flex items-center justify-between">
+          <ShoppingCartIcon />
+          <span className="px-2">Cart</span>
+          <span>{cart.length}</span>
+        </Button>
+      </Link>
     </div>
   );
 };
