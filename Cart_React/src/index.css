@@ -1,0 +1,29 @@
+:root {
+  --primary: #6161fe;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.search {
+  background-color: rgb(81, 104, 255);
+}
+
+@layer base {
+  li {
+  }
+
+  h1 {
+  }
+  h2 {
+  }
+  h3 {
+  }
+
+  button {
+  }
+
+  .icon {
+  }
+}
