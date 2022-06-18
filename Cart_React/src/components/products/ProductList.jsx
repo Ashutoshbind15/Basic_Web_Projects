@@ -5,11 +5,11 @@ const ProductList = ({ products, searchField }) => {
   return (
     <>
       <h1>ProductList</h1>
-      <ul>
+      <div className="flex flex-wrap">
         {products.map((el) => (
           <Product product={el} key={el.id} />
         ))}
-      </ul>
+      </div>
     </>
   );
 };

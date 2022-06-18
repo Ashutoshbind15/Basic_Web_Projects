@@ -29,7 +29,6 @@ function App() {
         inputChangeHandler={inputChangeHandler}
         searchInput={searchInput}
       />
-      {searchInput} - {products.length}
       <ProductList products={products} />
     </div>
   );
