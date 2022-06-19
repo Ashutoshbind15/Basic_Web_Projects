@@ -10,7 +10,6 @@ const Product = ({ product }) => {
   const dispatch = useDispatch();
 
   const [amt, setAmt] = useState(1);
-  const [outOfStock, setOutOfStock] = useState(false);
   const [invalid, setInvalid] = useState(false);
 
   const foundProductIndex = cart.findIndex((el) => el.id === product.id);
@@ -31,18 +30,18 @@ const Product = ({ product }) => {
     }
   }, [amt, cart, foundProductIndex, product.stock]);
 
+  const isOutOfStock = cart[foundProductIndex]?.amount === product.stock;
+
   const formSubmissionHandler = (e) => {
     e.preventDefault();
 
     if (foundProductIndex === -1) {
       if (+amt === product.stock) {
-        setOutOfStock(true);
       }
       dispatch(cartActions.addToCart({ product, amt: +amt }));
     } else {
       console.log(cart[foundProductIndex].amount + parseInt(amt));
       if (cart[foundProductIndex].amount + parseInt(amt) === product.stock) {
-        setOutOfStock(true);
       }
       dispatch(cartActions.updateAmount({ index: foundProductIndex, amt }));
     }
@@ -75,20 +74,20 @@ const Product = ({ product }) => {
             className="flex items-center"
             onSubmit={formSubmissionHandler}
           >
-            {!outOfStock && !invalid && (
+            {!isOutOfStock && !invalid && (
               <Button type="submit" className=" bg-orange-400  my-3 flex-1">
                 Add
               </Button>
             )}
-            {outOfStock && <h2>Out of Stock!!</h2>}
-            {!outOfStock && invalid && (
+            {isOutOfStock && <h2>Out of Stock!!</h2>}
+            {!isOutOfStock && invalid && (
               <h2 className="my-3 text-red-600">
                 Requested Number of Items not present in stock!
               </h2>
             )}
-            {!outOfStock && (
+            {!isOutOfStock && (
               <input
-                className="w-1/6 text-center"
+                className="w-1/6 text-center rounded-full border border-black ml-2"
                 type="number"
                 value={amt}
                 onChange={(e) => {
