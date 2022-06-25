@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", productRoutes);
-app.use("/auth", userRoutes);
+app.use("/users", userRoutes);
 
 app.use(catchError);
 

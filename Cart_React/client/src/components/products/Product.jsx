@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import Button from "../UI/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { cartActions } from "../../reducers/cartReducer";
+// import { cartActions } from "../../reducers/cartReducer";
 import Rating from "@mui/material/Rating";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { updateCart } from "../../actions/cartActions";
 
 const Product = ({ product }) => {
   const { user } = useSelector((state) => state.user);
@@ -15,17 +16,17 @@ const Product = ({ product }) => {
   const [amt, setAmt] = useState(1);
   const [invalid, setInvalid] = useState(false);
 
-  const foundProductIndex = cart.findIndex((el) => el.id === product.id);
+  const foundProductIndex = cart.findIndex((el) => el._id === product._id);
 
   useEffect(() => {
     if (foundProductIndex !== -1) {
-      if (cart[foundProductIndex].amount + parseInt(amt) > product.stock) {
+      if (+amt > cart[foundProductIndex]?.stock) {
         setInvalid(true);
       } else {
         setInvalid(false);
       }
     } else {
-      if (parseInt(amt) > product.stock) {
+      if (+amt > product.stock) {
         setInvalid(true);
       } else {
         setInvalid(false);
@@ -33,20 +34,52 @@ const Product = ({ product }) => {
     }
   }, [amt, cart, foundProductIndex, product.stock]);
 
-  const isOutOfStock = cart[foundProductIndex]?.amount === product.stock;
+  let isOutOfStock;
+
+  if (foundProductIndex !== -1) {
+    if (cart[foundProductIndex].stock > 0) {
+      isOutOfStock = false;
+    } else {
+      isOutOfStock = true;
+    }
+  } else {
+    if (product.stock > 0) {
+      isOutOfStock = false;
+    } else {
+      isOutOfStock = true;
+    }
+  }
 
   const formSubmissionHandler = (e) => {
     e.preventDefault();
 
-    if (foundProductIndex === -1) {
-      if (+amt === product.stock) {
-      }
-      dispatch(cartActions.addToCart({ product, amt: +amt }));
+    if (!user) {
+      navigate("/auth");
     } else {
-      console.log(cart[foundProductIndex].amount + parseInt(amt));
-      if (cart[foundProductIndex].amount + parseInt(amt) === product.stock) {
+      if (foundProductIndex === -1) {
+        // dispatch(cartActions.addToCart({ product, amt: +amt }));
+        dispatch(
+          updateCart({
+            product,
+            amount: +amt,
+            isInCart: false,
+            userId: user.id,
+            stock: product.stock - +amt,
+          })
+        );
+      } else {
+        dispatch(
+          updateCart({
+            product,
+            amount: cart[foundProductIndex]?.amount + +amt,
+            userId: user.id,
+            isInCart: true,
+            index: foundProductIndex,
+            stock: cart[foundProductIndex]?.stock - +amt,
+          })
+        );
+        // dispatch(cartActions.updateAmount({ index: foundProductIndex, amt }));
       }
-      dispatch(cartActions.updateAmount({ index: foundProductIndex, amt }));
     }
   };
 
@@ -78,17 +111,7 @@ const Product = ({ product }) => {
             onSubmit={formSubmissionHandler}
           >
             {!isOutOfStock && !invalid && (
-              <Button
-                type="submit"
-                className=" bg-orange-400  my-3 flex-1"
-                onClick={() => {
-                  if (user) {
-                    navigate("/cart");
-                  } else {
-                    navigate("/auth");
-                  }
-                }}
-              >
+              <Button type="submit" className=" bg-orange-400  my-3 flex-1">
                 Add
               </Button>
             )}

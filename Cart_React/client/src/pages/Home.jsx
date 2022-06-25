@@ -1,23 +1,49 @@
 import ProductList from "../components/products/ProductList";
 
-import data from "../product_dummy_data.json";
-
 import { useState } from "react";
 import { useEffect } from "react";
 import Header from "../components/UI/Header";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { cartActions } from "../reducers/cartReducer";
 
 const Home = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [products, setProducts] = useState(data.products);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const filteredProducts = data.products.filter(
+    const fetchProducts = async () => {
+      const { data } = await axios.get("https://ecom-backend1.herokuapp.com/");
+      setProducts(data);
+    };
+
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (user) {
+        const { data } = await axios.get(
+          `https://ecom-backend1.herokuapp.com/users/${user.id}/cart`
+        );
+        dispatch(cartActions.setCart(data));
+      }
+    };
+
+    fetchCart();
+  }, [dispatch, user?.id, user]);
+
+  useEffect(() => {
+    const newArray = products.filter(
       (el) =>
         el.description.toLowerCase().includes(searchInput) ||
         el.title.toLowerCase().includes(searchInput)
     );
-    setProducts(filteredProducts);
-  }, [searchInput]);
+    setFilteredProducts(newArray);
+  }, [searchInput, products]);
 
   const inputChangeHandler = (e) => {
     setSearchInput(e.target.value);
@@ -29,7 +55,7 @@ const Home = () => {
         inputChangeHandler={inputChangeHandler}
         searchInput={searchInput}
       />
-      <ProductList products={products} />
+      <ProductList products={filteredProducts} />
     </div>
   );
 };

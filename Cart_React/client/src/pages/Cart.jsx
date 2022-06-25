@@ -1,8 +1,10 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CartItem from "../components/products/CartItem";
 import Button from "../components/UI/Button";
+import { cartActions } from "../reducers/cartReducer";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -11,6 +13,20 @@ const Cart = () => {
   for (let item of cart) {
     total += item?.amount * item?.price;
   }
+
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      const { data } = await axios.get(
+        `https://ecom-backend1.herokuapp.com/users/${user.id}/cart`
+      );
+      dispatch(cartActions.setCart(data));
+    };
+
+    fetchCart();
+  }, [dispatch, user.id]);
 
   return (
     <>

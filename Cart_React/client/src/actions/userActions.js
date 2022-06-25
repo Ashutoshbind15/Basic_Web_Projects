@@ -6,7 +6,7 @@ export const loginUser = (payload) => async (dispatch) => {
 
   try {
     const { data } = await axios.post(
-      "http://localhost:3001/auth/login",
+      "https://ecom-backend1.herokuapp.com/users/login",
       payload
     );
 
@@ -25,12 +25,17 @@ export const loginUser = (payload) => async (dispatch) => {
   }
 };
 
+export const logoutUser = () => (dispatch) => {
+  localStorage.removeItem("user");
+  dispatch(userActions.logout());
+};
+
 export const registerUser = (payload) => async (dispatch) => {
   dispatch(userActions.setLoading(true));
 
   try {
     const { data } = await axios.post(
-      "http://localhost:3001/auth/register",
+      "https://ecom-backend1.herokuapp.com/users/register",
       payload
     );
 

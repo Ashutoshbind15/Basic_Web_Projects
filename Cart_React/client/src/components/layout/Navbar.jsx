@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../UI/Button";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link, useNavigate } from "react-router-dom";
-import { userActions } from "../../reducers/userReducer";
+// import { userActions } from "../../reducers/userReducer";
 import { Avatar } from "@mui/material";
+import { cartActions } from "../../reducers/cartReducer";
+import { logoutUser } from "../../actions/userActions";
 
 const Navbar = (props) => {
   const cart = useSelector((state) => state.cart.cart);
@@ -41,7 +43,8 @@ const Navbar = (props) => {
           <Button
             className="mr-3 hover:text-white search px-12 flex items-center justify-between"
             onClick={() => {
-              dispatch(userActions.logout());
+              dispatch(logoutUser());
+              dispatch(cartActions.freeCart());
             }}
           >
             Logout

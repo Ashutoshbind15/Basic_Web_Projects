@@ -1,6 +1,7 @@
 const User = require("../models/UserModel");
 const catchAsync = require("express-async-handler");
 const bcrypt = require("bcryptjs");
+const { Product } = require("../models/ProductModel");
 
 const register = catchAsync(async (req, res) => {
   try {
@@ -18,6 +19,7 @@ const register = catchAsync(async (req, res) => {
     res.status(200).json({
       username,
       email,
+      id: user._id,
     });
   } catch (error) {
     console.log(error);
@@ -34,6 +36,7 @@ const login = catchAsync(async (req, res) => {
     res.status(200).json({
       username: user.username,
       email,
+      id: user._id,
     });
   } else {
     res.status(401);
@@ -41,7 +44,41 @@ const login = catchAsync(async (req, res) => {
   }
 });
 
+const updateCart = catchAsync(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  const { product, amount, stock } = req.body;
+
+  const updatedProduct = await Product.findByIdAndUpdate(
+    product._id,
+    { stock: stock },
+    { new: true }
+  );
+
+  const foundProductIndex = user.cart.findIndex(
+    (el) => el.title === product.title
+  );
+
+  if (foundProductIndex === -1) {
+    user.cart.push({ ...updatedProduct._doc, amount: amount });
+  } else {
+    user.cart[foundProductIndex] = { ...updatedProduct._doc, amount: amount };
+  }
+
+  if (amount === 0) {
+    user.cart.splice(foundProductIndex, 1);
+  }
+
+  await user.save();
+});
+
+const getCart = async (req, res) => {
+  const user = await User.findById(req.params.id);
+  res.status(200).json(user.cart);
+};
+
 module.exports = {
   register,
   login,
+  updateCart,
+  getCart,
 };

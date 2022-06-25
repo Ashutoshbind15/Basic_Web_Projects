@@ -1,4 +1,4 @@
-const Product = require("../models/ProductModel");
+const { Product } = require("../models/ProductModel");
 const catchAsync = require("express-async-handler");
 
 const getAll = catchAsync(async (req, res) => {
