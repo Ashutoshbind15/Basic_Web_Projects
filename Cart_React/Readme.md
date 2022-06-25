@@ -11,7 +11,7 @@ Tailwind CSS,MUI and Redux-Toolkit!
 
 ## Installation
 
-Install my-project with npm
+Install the project with npm
 
 ```bash
   cd client
