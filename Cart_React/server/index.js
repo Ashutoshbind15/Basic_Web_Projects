@@ -4,14 +4,21 @@ const PORT = process.env.PORT || 3001;
 dotenv.config();
 const db = require("./config/db");
 const productRoutes = require("./routes/productRoutes");
-const cors = require('cors')
+const userRoutes = require("./routes/userRoutes");
+const cors = require("cors");
+const { catchError } = require("./middleware/errorHandler");
 
 db();
 const app = express();
 
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/", productRoutes);
+app.use("/auth", userRoutes);
+
+app.use(catchError);
 
 app.listen(PORT, () => {
   console.log(`Listening to ${PORT} port`);

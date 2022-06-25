@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import CartItem from "../components/products/CartItem";
 import Button from "../components/UI/Button";
 
@@ -25,7 +26,14 @@ const Cart = () => {
           <Button className="search">Proceed To Checkout</Button>
         </div>
       ) : (
-        ""
+        <div className="flex py-20 items-center justify-center">
+          <h1 className="font-bold text-2xl mr-2">
+            No Items in the Cart yet!! Shop now! {"-->>"}
+          </h1>
+          <Button className="text-2xl auth">
+            <Link to="/">Back to HomePage</Link>
+          </Button>
+        </div>
       )}
     </>
   );

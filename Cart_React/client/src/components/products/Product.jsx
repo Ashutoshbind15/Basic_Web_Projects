@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../../reducers/cartReducer";
 import Rating from "@mui/material/Rating";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Product = ({ product }) => {
+  const { user } = useSelector((state) => state.user);
   const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [amt, setAmt] = useState(1);
   const [invalid, setInvalid] = useState(false);
@@ -75,7 +78,17 @@ const Product = ({ product }) => {
             onSubmit={formSubmissionHandler}
           >
             {!isOutOfStock && !invalid && (
-              <Button type="submit" className=" bg-orange-400  my-3 flex-1">
+              <Button
+                type="submit"
+                className=" bg-orange-400  my-3 flex-1"
+                onClick={() => {
+                  if (user) {
+                    navigate("/cart");
+                  } else {
+                    navigate("/auth");
+                  }
+                }}
+              >
                 Add
               </Button>
             )}
