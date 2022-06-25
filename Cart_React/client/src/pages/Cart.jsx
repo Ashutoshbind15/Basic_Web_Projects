@@ -19,14 +19,16 @@ const Cart = () => {
 
   useEffect(() => {
     const fetchCart = async () => {
-      const { data } = await axios.get(
-        `https://ecom-backend1.herokuapp.com/users/${user.id}/cart`
-      );
-      dispatch(cartActions.setCart(data));
+      if (user) {
+        const { data } = await axios.get(
+          `https://ecom-backend1.herokuapp.com/users/${user.id}/cart`
+        );
+        dispatch(cartActions.setCart(data));
+      }
     };
 
     fetchCart();
-  }, [dispatch, user.id]);
+  }, [dispatch, user?.id, user]);
 
   return (
     <>
